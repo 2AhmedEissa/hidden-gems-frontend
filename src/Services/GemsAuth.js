@@ -1,28 +1,26 @@
 import axios from "axios";
+import { mockGems } from "../data/mockData";
 const baseURL = import.meta.env.VITE_Base_URL;
 
 export async function getGemByIdAPI(id) {
   try {
-    // console.log("Fetching Gem ID:", id);
-    // console.log("URL:", baseURL + `/gems/${id}`);
     const { data } = await axios.get(baseURL + `/gems/${id}`);
-    // console.log("API Response:", data);
     return data;
   } catch (error) {
-    console.error("API Error:", error);
-    return error.response ? error.response.data : { error: "Network error" };
+    console.error("API Error, falling back to mock data:", error);
+    const mockGem = mockGems.find(g => g._id === id);
+    return mockGem ? { result: mockGem } : { error: "Gem not found" };
   }
 }
 
 export async function getGemsAPI(params = {}) {
   try {
     const queryString = new URLSearchParams(params).toString();
-    // console.log("Fetching Gems with params:", queryString);
     const { data } = await axios.get(baseURL + `/gems?${queryString}`);
     return data;
   } catch (error) {
-    console.error("API Error:", error);
-    return error.response ? error.response.data : { error: "Network error" };
+    console.error("API Error, falling back to mock data:", error);
+    return { result: mockGems };
   }
 }
 

@@ -4,6 +4,8 @@ import GemDetails from "../../Components/Gems/GemDetails";
 import axios from "axios";
 
 
+import { mockGems } from "../../data/mockData.js";
+
 export default function Gems() {
     const [selectedGem, setSelectedGem] = useState(null); //nothing selected
     const handleSelectedGem = (gemId) => {
@@ -15,14 +17,16 @@ export default function Gems() {
     const [error, setError] = useState(null)
     
     useEffect(()=>{
-      axios.get(process.env.REACT_APP_GetAllGems).then((res)=>{  //api
-        setGemsData(res.data);
+      const url = import.meta.env.VITE_Base_URL + "/gems";
+      axios.get(url).then((res)=>{  //api
+        setGemsData(res.data.result || res.data);
         setIsLoading(false);
       }).catch((err)=>{
-        setError(err.message);
+        console.error("Error fetching gems, using mock data:", err);
+        setGemsData(mockGems);
         setIsLoading(false);
-      },[])
-    })
+      })
+    }, [])
 
   if(selectedGem !== null){
     return(
@@ -33,9 +37,9 @@ export default function Gems() {
     )
   }
   return (
-    gems.map(
+    gemsData.map(
       (gem)=>{
-        return <GemItem gemId={gem} onSelect={handleSelectedGem} /> //gem 
+        return <GemItem key={gem._id} gemId={gem._id} gem={gem} onSelect={handleSelectedGem} /> //gem 
       }
     ))
 }

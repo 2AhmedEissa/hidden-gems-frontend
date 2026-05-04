@@ -31,6 +31,7 @@ import SubscriptionPlans from "../../Components/Subscription/SubscriptionPlans";
 import SurpriseButton from "../../Components/SurpriseButton/SurpriseButton";
 import { useSelector } from "react-redux";
 import ScrollToTop from "../../Components/ScrollToTop";
+import { mockGems, mockCategories } from "../../data/mockData.js";
 
 export default function CategoriesPage() {
   const { t } = useTranslation("CategoriesPage"); 
@@ -89,6 +90,7 @@ export default function CategoriesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput, selectedCategory, selectedSort]);
 
+
   // Fetch categories
   const fetchCategories = () => {
     axios
@@ -99,7 +101,8 @@ export default function CategoriesPage() {
         }
       })
       .catch((error) => {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching categories, using mock data:", error);
+        setCategories(mockCategories);
       });
   };
 
@@ -128,9 +131,11 @@ export default function CategoriesPage() {
         }
       })
       .catch((err) => {
-        console.error("Error fetching gems:", err);
-        setError(err.message || t("messages.errorLoading"));
-        setGems([]);
+        console.error("Error fetching gems, using mock data:", err);
+        // setError(err.message || t("messages.errorLoading"));
+        setGems(mockGems);
+        setTotalPages(1);
+        setTotalItems(mockGems.length);
       })
       .finally(() => {
         setLoading(false);

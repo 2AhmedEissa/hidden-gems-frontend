@@ -162,6 +162,8 @@ const ParallaxGem = ({ gem, index, isDarkMode }) => {
   );
 };
 
+import { mockGems } from "../../data/mockData.js";
+
 export default function SponsoredGems() {
     const { t, i18n } = useTranslation("SponsoredGems");
   const navigate =useNavigate()
@@ -207,7 +209,8 @@ navigate("/profile")
           }
         })
         .catch((error) => {
-          console.error("Error loading gems", error);
+          console.error("Error loading gems, using mock data", error);
+          setSponsoredGems(mockGems.filter(gem => gem.isSubscribed));
         })
         .finally(() => {
           setLoading(false);

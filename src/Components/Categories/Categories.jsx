@@ -13,6 +13,8 @@ import {
 import { useTranslation } from "react-i18next";
 import LoadingScreen from "@/Pages/LoadingScreen";
 
+import { mockCategories } from "../../data/mockData";
+
 const BASE_URL = import.meta.env.VITE_Base_URL;
 
 // ✅ PURE CSS CATEGORY ITEM (NO FRAMER MOTION)
@@ -92,7 +94,9 @@ export default function Categories() {
         setCategories(res.data.result);
       }
     } catch (error) {
-      setError(error?.response?.data?.message || "Failed to fetch categories");
+      console.error("Failed to fetch categories, falling back to mock data", error);
+      setCategories(mockCategories);
+      // setError(error?.response?.data?.message || "Failed to fetch categories");
     } finally {
       setLoading(false);
     }

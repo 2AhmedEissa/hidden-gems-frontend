@@ -10,6 +10,7 @@ import SurpriseButton from "../../Components/SurpriseButton/SurpriseButton.jsx";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { mockGems } from "../../data/mockData.js";
 
 export default function Home() {
   const { t, i18n } = useTranslation("home");
@@ -44,7 +45,8 @@ export default function Home() {
           );
         })
         .catch((error) => {
-          // console.log(error);
+          console.error("Failed to fetch subscribed gems, using mock data", error);
+          setSubscribedGems(mockGems.filter(gem => gem.isSubscribed));
         });
     };
 
