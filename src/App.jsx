@@ -81,6 +81,8 @@ import AllTransactions from "./Pages/Transactions/AllTransactions/AllTransaction
 import TransactionDashboard from "./Pages/Transactions/TransactionDashboard/TransactionDashboard";
 import AllReports from "./Pages/AdminPages/Reports/AllReports/AllReports";
 import ReportDetails from "./Pages/AdminPages/Reports/ReportDetails/ReportDetails";
+import ErrorBoundary, { ErrorPage } from "./Components/ErrorBoundary/ErrorBoundary";
+
 function App() {
   const dark = useSelector((state) => state.darkMode.enabled);
   const dispatch = useDispatch();
@@ -131,6 +133,7 @@ function App() {
     {
       path: "/",
       element: <Layout />,
+      errorElement: <ErrorPage />,
       children: [
         { index: true, element: <Home /> },
         { path: "home", element: <Home /> },
@@ -415,7 +418,9 @@ function App() {
             },
           }}
         />
-        <RouterProvider router={router} />
+        <ErrorBoundary>
+          <RouterProvider router={router} />
+        </ErrorBoundary>
       </GoogleOAuthProvider>
     </div>
   );

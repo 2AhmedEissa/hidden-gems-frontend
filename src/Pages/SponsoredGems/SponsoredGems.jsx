@@ -201,7 +201,7 @@ navigate("/profile")
       axios
         .get(`${import.meta.env.VITE_Base_URL}/gems/subscribed`)
         .then((res) => {
-          if (res.data && res.data.result) {
+          if (res.data && Array.isArray(res.data.result)) {
             const activeSponsored = res.data.result.filter(
               (gem) => gem.status === "accepted"
             );

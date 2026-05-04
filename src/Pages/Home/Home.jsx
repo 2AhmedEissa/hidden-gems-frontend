@@ -27,7 +27,7 @@ export default function Home() {
     const fetchGems = async () => {
       try {
         const data = await getGemsAPI();
-        if (data && data.result) {
+        if (data && Array.isArray(data.result)) {
           setGems(data.result.filter((gem) => gem.status === "accepted"));
         }
       } catch (error) {
@@ -40,9 +40,14 @@ export default function Home() {
       axios
         .get(`${import.meta.env.VITE_Base_URL}/gems/subscribed`)
         .then((res) => {
-          setSubscribedGems(
-            res.data?.result?.filter((gem) => gem.status === "accepted")
-          );
+          const result = res.data?.result;
+          if (Array.isArray(result)) {
+            setSubscribedGems(
+              result.filter((gem) => gem.status === "accepted")
+            );
+          } else {
+            setSubscribedGems([]);
+          }
         })
         .catch((error) => {
           console.error("Failed to fetch subscribed gems, using mock data", error);
