@@ -93,17 +93,7 @@ export default function CategoriesPage() {
 
   // Fetch categories
   const fetchCategories = () => {
-    axios
-      .get(`${baseURL}/categories`, { withCredentials: true })
-      .then((response) => {
-        if (response.data.message === "success") {
-          setCategories(response.data.result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching categories, using mock data:", error);
-        setCategories(mockCategories);
-      });
+    setCategories(mockCategories);
   };
 
   // Fetch gems
@@ -111,35 +101,39 @@ export default function CategoriesPage() {
     setLoading(true);
     setError("");
 
-    const params = {
-      page: currentPage,
-      status: "accepted",
-    };
+    let filtered = mockGems;
 
-    if (searchInput) params.keyword = searchInput;
-    if (selectedCategory) params.category = selectedCategory;
-    if (selectedSort) params.sort = selectedSort;
+    if (categoryName) {
+      const matchedCat = mockCategories.find(
+        (c) => c.categoryName.toLowerCase() === categoryName.toLowerCase()
+      );
+      if (matchedCat) {
+        filtered = filtered.filter((g) => g.category === matchedCat._id);
+      }
+    }
 
-    axios
-      .get(`${baseURL}/gems`, { params, withCredentials: true })
-      .then((response) => {
-        const data = response.data;
-        if (data.message === "success") {
-          setGems(data.result || []);
-          setTotalPages(data.totalPages || 1);
-          setTotalItems(data.totalItems || 0);
-        }
-      })
-      .catch((err) => {
-        console.error("Error fetching gems, using mock data:", err);
-        // setError(err.message || t("messages.errorLoading"));
-        setGems(mockGems);
-        setTotalPages(1);
-        setTotalItems(mockGems.length);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    if (searchInput) {
+      filtered = filtered.filter((g) =>
+        g.name.toLowerCase().includes(searchInput.toLowerCase())
+      );
+    }
+
+    if (selectedCategory) {
+      filtered = filtered.filter((g) => g.category === selectedCategory);
+    }
+
+    if (selectedSort === "name") {
+      filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+    } else if (selectedSort === "-name") {
+      filtered = [...filtered].sort((a, b) => b.name.localeCompare(a.name));
+    } else if (selectedSort === "-avgRating") {
+      filtered = [...filtered].sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0));
+    }
+
+    setGems(filtered);
+    setTotalPages(1);
+    setTotalItems(filtered.length);
+    setLoading(false);
   };
 
   // Clear all filters

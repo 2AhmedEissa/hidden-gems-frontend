@@ -24,39 +24,10 @@ export default function Home() {
   const isRTL = i18n.language === "ar";
 
   useEffect(() => {
-    const fetchGems = async () => {
-      try {
-        const data = await getGemsAPI();
-        if (data && Array.isArray(data.result)) {
-          setGems(data.result.filter((gem) => gem.status === "accepted"));
-        }
-      } catch (error) {
-        console.error("Failed to fetch gems", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    const fetchSubscribedGems = () => {
-      axios
-        .get(`${import.meta.env.VITE_Base_URL}/gems/subscribed`)
-        .then((res) => {
-          const result = res.data?.result;
-          if (Array.isArray(result)) {
-            setSubscribedGems(
-              result.filter((gem) => gem.status === "accepted")
-            );
-          } else {
-            setSubscribedGems([]);
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to fetch subscribed gems, using mock data", error);
-          setSubscribedGems(mockGems.filter(gem => gem.isSubscribed));
-        });
-    };
-
-    fetchSubscribedGems();
-    fetchGems();
+    // Use mock data directly
+    setGems(mockGems.filter((gem) => gem.status === "accepted"));
+    setSubscribedGems(mockGems.filter((gem) => gem.isSubscribed));
+    setLoading(false);
   }, []);
 
   const slides = [

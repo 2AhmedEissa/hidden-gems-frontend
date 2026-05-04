@@ -86,20 +86,9 @@ export default function Categories() {
   const [error, setError] = useState(null);
 
   const fetchCategories = useCallback(async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/categories/allCategories`, {
-        withCredentials: true,
-      });
-      if (res.data.result) {
-        setCategories(res.data.result);
-      }
-    } catch (error) {
-      console.error("Failed to fetch categories, falling back to mock data", error);
-      setCategories(mockCategories);
-      // setError(error?.response?.data?.message || "Failed to fetch categories");
-    } finally {
-      setLoading(false);
-    }
+    // Use mock data directly
+    setCategories(mockCategories);
+    setLoading(false);
   }, []);
 
   useEffect(() => {

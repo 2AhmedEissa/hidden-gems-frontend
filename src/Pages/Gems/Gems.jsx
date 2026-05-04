@@ -17,16 +17,9 @@ export default function Gems() {
     const [error, setError] = useState(null)
     
     useEffect(()=>{
-      const url = import.meta.env.VITE_Base_URL + "/gems";
-      axios.get(url).then((res)=>{  //api
-        const result = res.data.result || res.data;
-        setGemsData(Array.isArray(result) ? result : []);
-        setIsLoading(false);
-      }).catch((err)=>{
-        console.error("Error fetching gems, using mock data:", err);
-        setGemsData(mockGems);
-        setIsLoading(false);
-      })
+      // Use mock data directly
+      setGemsData(mockGems);
+      setIsLoading(false);
     }, [])
 
   if(selectedGem !== null){

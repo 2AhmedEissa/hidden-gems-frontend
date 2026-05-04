@@ -196,27 +196,9 @@ navigate("/profile")
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    const fetchGems = () => {
-      axios
-        .get(`${import.meta.env.VITE_Base_URL}/gems/subscribed`)
-        .then((res) => {
-          if (res.data && Array.isArray(res.data.result)) {
-            const activeSponsored = res.data.result.filter(
-              (gem) => gem.status === "accepted"
-            );
-            setSponsoredGems(activeSponsored);
-          }
-        })
-        .catch((error) => {
-          console.error("Error loading gems, using mock data", error);
-          setSponsoredGems(mockGems.filter(gem => gem.isSubscribed));
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    };
-    fetchGems();
+    // Use mock data directly
+    setSponsoredGems(mockGems.filter((gem) => gem.isSubscribed && gem.status === "accepted"));
+    setLoading(false);
   }, []);
 
   if (loading) return <LoadingSkeleton isDarkMode={isDarkMode} />;
